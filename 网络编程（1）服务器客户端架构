@@ -1,0 +1,38 @@
+在codeblock上想运行这个真的挺麻烦的。首先需要链接一个叫Ws2_32.lib的库。它也在cb自带的mingw中。
+只使用#pragma comment是不行的，估计是文件的路径的问题。下次试试能不能用这个语句链接到那个库。
+然后是学习很多没见过的名词，甚至是WORD表示unsigned short我都不知道。
+然后需要复习的东西，WSAData这样一种数据类型，WSAStartup在网络编程中的意义，hostent结构体所代表的主机标识的意思。
+
+为了实现服务器客户端架构，必须知道本机，也就是服务器的ip地址。
+那么下文就是能实现求此ip地址的函数。说实话并不难，就是比较陌生，应该用了几次就好了。
+#include<bits/stdc++.h>
+#include<winsock2.h>
+#include<unistd.h>
+#include"PRINT.h"
+#pragma comment(thread)
+using namespace std;
+const int PORT= 8050;
+//  WORD=unsigned short
+int main()
+{
+
+    char pcname[100];
+
+    WSAData mydata;
+    WSAStartup(MAKEWORD(2,2),&mydata);
+    gethostname(pcname,sizeof pcname);
+    hostent * mypc=gethostbyname(pcname);
+    printf("OK\n");
+    
+
+    for(int i=0;mypc->h_addr_list[i];i++)
+    {
+        in_addr in;
+        memcpy(&in,mypc->h_addr_list[i],sizeof(in_addr));
+        cout<<inet_ntoa(in)<<endl;
+
+    }
+    WSACleanup();
+    printf("OK\n");
+
+}
